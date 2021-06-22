@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+usage() {
+  echo 'Usage:' >&2
+  echo "  release 'notes about the release'" >&2
+  echo "  release --version VERSION_OVERRIDE 'notes about the release'" >&2
+}
+
+git-get-latest-version() {
+  git --no-pager tag --sort=v:refname | tail -n1
+}
+
+bump-patch() {
+  local sv="${1}"
+  [ -z "${sv}" ] && return 1
+  local pv="${sv##*.}"
+  jnv="${sv%.*}"
+  [ "${pv}" = "${sv}" ] && return 1
+  [ "${jnv}" = "${sv}" ] && return 1
+  declare -i ipv=${pv}
+  ipv=$(( $ipv + 1 ))
+  echo "${jnv}.${ipv}"
+}
+
+git-stuff() {
+  git tag -a -m "${release_notes}" "${version}" && \
+    git push --tag && \
+    gh release create --notes "${release_notes}" "${version}" blimp
+}
+
+
+if [ "${1}" = '--version' ]; then
+  if [ $# -ne 3 ]; then
+    usage
+    exit 1
+  fi
+  version="${2}"
+  shift 2
+else
+  git_version="$(git-get-latest-version)"
+  version="$(bump-patch "${git_version}")"
+  if [ $? -ne 0 ]; then
+    echo "Could not bump patch from git version [${git_version}]" >&2
+    exit 1
+  fi
+fi
+release_notes="${1}"
+
+# Main
+git-stuff
