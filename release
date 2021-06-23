@@ -46,14 +46,29 @@ validate-semver() {
     return 255
   fi
   return 0
+  # TODO: no leading zeroes in a part unless it's exactly one zero
+}
+
+declare -a release_files=()
+read-release-files() {
+  if [ -f 'package.sh' ]
+    release_files+=('package.sh')
+  fi
+  if [ -f 'release-files' ]; then
+    while read line; do
+      release_files+=("${line}")
+    done < <(cat 'release-files')
+  fi
+  [ ${#release_files[@]} -gt 0 ]
 }
 
 git-stuff() {
-  git tag -a -m "${release_notes}" "${version}" && \
+  [ -n "${release_notes}" ] && [ -n "${version}"  ] && \
+    read-release-files && \
+    git tag -a -m "${release_notes}" "${version}" && \
     git push --tag && \
-    gh release create --notes "${release_notes}" "${version}" blimp
+    gh release create --notes "${release_notes}" "${version}" "${release_files[@]}"
 }
-
 
 # Options
 if [ "${1}" = '--version' ]; then
