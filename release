@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#=import semver
+
 _CMD_GREP='/bin/grep'
 if [ 'Darwin' = "$(uname)" ]; then
   type ggrep >/dev/null 2>&1

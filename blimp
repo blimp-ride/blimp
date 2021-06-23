@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 export BLIMP_VERSION='0.0.1'
 
+#=import os
+
 #
 # Freshen global platforms
 # Freshen global envs
