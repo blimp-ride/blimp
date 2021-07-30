@@ -44,13 +44,7 @@ declare -A host_organization_aliases=(
   [@i2]='i2.github.com'
 )
 declare -A host_organization_remaps=(
-  [github.com/6FTS]='@e11'
-  [github.com/CNect]='@e11'
-  [github.com/ConcentricCompliance]='@e11'
-  [github.com/e11automaton]='@e11'
   [github.com/e11community]='@e11'
-  [github.com/e11sandbox]='@e11'
-  [github.com/enginnering11]='@e11'
   [github.com/intriguefortwo]='@i2'
 )
 
